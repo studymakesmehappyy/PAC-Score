@@ -1,5 +1,5 @@
 PAC-S 与 EMScore 集成
-该项目集成了 PAC-Score 和 EMScore，用于评估视频特征与多个参考字幕的相关性。你可以使用 pacs_emscore_integration1.py 脚本，通过多个可配置选项来计算视频和文本的相关性。
+该项目集成了 PAC-Score 和 EMScore，用于评估视频特征与多个参考字幕的相关性。你可以使用 pacs_emscore_integration.py 脚本，通过多个可配置选项来计算视频和文本的相关性。
 
 
 
