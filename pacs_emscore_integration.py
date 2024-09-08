@@ -90,7 +90,7 @@ if __name__ == '__main__':
     refs = []
 
     # 加载去重视频ID的JSON文件
-    json_file_path = "/cpfs/29f69eb5e2e60f26/user/sft_intern/czr/emscore/de_duplicated_video_ids.json"
+    json_file_path = "./de_duplicated_video_ids.json"
     with open(json_file_path, 'r') as f:
         de_video_ids = json.load(f)
     
