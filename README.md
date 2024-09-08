@@ -1,107 +1,21 @@
-Automatic Video Captioning Evaluation Metric --- EMScore
-
-
-## Overview
-
-For an illustration, EMScore can be computed as:
-
-![EMScore](./emscore/images/EMScore.png)
+PAC-S 与 EMScore 集成
+该项目集成了 PAC-Score 和 EMScore，用于评估视频特征与多个参考字幕的相关性。你可以使用 pacs_emscore_integration1.py 脚本，通过多个可配置选项来计算视频和文本的相关性。
 
 
 
+你可以使用以下命令运行 pacs_emscore_integration.py 脚本：
 
-## Installation
+python pacs_emscore_integration1.py --storage_path ./VATEX-EVAL --use_n_refs 9 --use_feat_cache --use_idf --clip_model ViT-B/32 --compute_refpac
 
-- modify the `encode_text()` function in `CLIP/clip/model.py` as follows:
+命令行参数：
+--storage_path: （必选）数据集存储目录的路径（例如 VATEX-EVAL）。 示例：--storage_path ./VATEX-EVAL
 
-  ```
-  def encode_text(self, text, local=False):
-      x = self.token_embedding(text).type(self.dtype)  # [batch_size, n_ctx, d_model]
-  
-      x = x + self.positional_embedding.type(self.dtype)
-      x = x.permute(1, 0, 2)  # NLD -> LND
-      x = self.transformer(x)
-      x = x.permute(1, 0, 2)  # LND -> NLD
-      x = self.ln_final(x).type(self.dtype)
-  
-      if local:
-          x = x @ self.text_projection
-      else:
-          # x.shape = [batch_size, n_ctx, transformer.width]
-          # take features from the eot embedding (eot_token is the highest number in each sequence)
-          x = x[torch.arange(x.shape[0]), text.argmax(dim=-1)] @ self.text_projection
-    
-      return x
-  ```
+--use_n_refs: （可选）用于评估的参考字幕数量（默认：1）。该值可以在 1 到 9 之间。这意味着 PAC-Score 将根据几个参考字幕与候选字幕进行比较，以评估生成字幕的质量。
 
-- Push your modified CLIP to your GitHub.
+--use_feat_cache: （可选）是否使用预计算的视频特征缓存。如果设置了该参数，脚本将使用之前提取的视频特征，而无需重新计算。
 
-- Install
+--use_idf: （可选）是否使用逆文档频率（IDF）进行权重计算，以更好地衡量候选字幕与参考字幕之间的匹配。
 
-    ```
-    $ conda install --yes -c pytorch pytorch=1.7.1 torchvision cudatoolkit=11.0
-    $ pip install ftfy regex tqdm
-    $ pip install git+https://github.com/$Yours_GitHub_name/CLIP
-    ```
+--clip_model: （可选）选择要使用的 CLIP 模型。默认值为 ViT-B/32，可选择 ViT-B/32 或 open_clip_ViT-L/14。
 
-Replace `cudatoolkit=11.0` above with the appropriate CUDA version on your machine or `cpuonly` when installing on a machine without a GPU.
-
-
-
-## Usage:
-
-### A general demo
-```
-python demo.py 
-```
-
-
-### VATEX-EVAL
-- download the files in the following link, and save at a storage directory  
-```
-https://drive.google.com/drive/folders/1jAfZZKEgkMEYFF2x1mhYo39nH-TNeGm6?usp=sharing
-```
-
-- run code
-```
-python VATEX-EVAL-demo.py --storage_path $storage_path --use_n_refs 1 --use_feat_cache --use_idf
-```
-
-
-### ActivityNet-FOIL
-- download the files in the following link, and save at a storage directory  
-```
-https://drive.google.com/drive/folders/1oY9EJiEi_db_1GH-R33JDqfE8txffKR3?usp=sharing
-```
-
-- run code
-```
-python ActivityNet-FOIL_demo.py --storage_path $storage_path --use_references --use_idf
-```
-
-## Others
-if you want extract embeddings by yourself:
-```
-python extract_video_embeddings.py --videos_path $your_video_path  --save_path $your_storage_path --backbone 'ViT-B/32' 
-```
-
-
-## Citation
-If you find this code useful for your research, please consider citing:
-
-```
-@inproceedings{DBLP:conf/cvpr/ShiYXYLHZ22,
-  author    = {Yaya Shi and
-               Xu Yang and
-               Haiyang Xu and
-               Chunfeng Yuan and
-               Bing Li and
-               Weiming Hu and
-               Zheng{-}Jun Zha},
-  title     = {EMScore: Evaluating Video Captioning via Coarse-Grained and Fine-Grained
-               Embedding Matching},
-  booktitle = {{IEEE/CVF} Conference on Computer Vision and Pattern Recognition,
-               {CVPR} 2022, New Orleans, LA, USA, June 18-24, 2022},
-  year      = {2022},
-}
-```
+--compute_refpac: （可选）是否计算 RefPAC-S 分数。如果提供此参数，脚本将计算 RefPAC-S 分数，这是结合候选字幕与参考字幕之间的关系进行的额外评估。
