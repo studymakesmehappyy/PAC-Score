@@ -1,5 +1,8 @@
 import torch
-import clip
+import clip #for Emscore
+
+#from models import open_clip  for PAC-Score
+#from models.clip import clip  for PAC-Score
 from PIL import Image
 import json
 import cv2
