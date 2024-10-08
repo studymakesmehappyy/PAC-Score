@@ -51,8 +51,12 @@ class EMScorer:
         """
         
         model, preprocess = clip.load("ViT-B/32", device=self.device)
-    #    checkpoint = torch.load(_MODELS[opt.clip_model])  for PAC-Score
-    #    model.load_state_dict(checkpoint['state_dict'])   for PAC-Score
+#       model = model.to(device)                          for PAC-Score
+#       model = model.float()                             for PAC-Score
+#       checkpoint = torch.load(_MODELS[opt.clip_model])  for PAC-Score
+#       model.load_state_dict(checkpoint['state_dict'])   for PAC-Score
+#       model.eval()                                      for PAC-Score
+
         
         self._model = model
         self._tokenizer = clip.tokenize
