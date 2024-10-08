@@ -1,5 +1,9 @@
 import torch
-import clip
+import clip #for Emscore
+
+#from models import open_clip  for PAC-Score
+#from models.clip import clip  for PAC-Score
+
 from PIL import Image
 import json
 import cv2
@@ -11,6 +15,12 @@ from collections import defaultdict
 
 
 from .utils import em_cos_score, get_idf_dict
+
+
+_MODELS = {
+    "ViT-B/32": "checkpoints/clip_ViT-B-32.pth",
+    "open_clip_ViT-L/14": "checkpoints/openClip_ViT-L-14.pth"
+}
 
 class EMScorer:
     """
@@ -41,6 +51,9 @@ class EMScorer:
         """
         
         model, preprocess = clip.load("ViT-B/32", device=self.device)
+    #    checkpoint = torch.load(_MODELS[opt.clip_model])  for PAC-Score
+    #    model.load_state_dict(checkpoint['state_dict'])   for PAC-Score
+        
         self._model = model
         self._tokenizer = clip.tokenize
         self._image_preprocess = preprocess
