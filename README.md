@@ -11,7 +11,6 @@ import clip  # for Emscore
 
 替换为：
 
-```python
 from models import open_clip  # for PAC-Score
 from models.clip import clip  # for PAC-Score
 
