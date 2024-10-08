@@ -9,7 +9,10 @@ import math
 from tqdm import tqdm
 from emscore import EMScorer
 from emscore.utils import get_idf_dict, compute_correlation_uniquehuman
-import clip
+import clip #for Emscore
+
+#from models import open_clip  for PAC-Score
+#from models.clip import clip  for PAC-Score
 
 def get_feats_dict(feat_dir_path):
     print('loding cache feats ........')
